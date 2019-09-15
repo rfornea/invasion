@@ -1,10 +1,10 @@
 package filehandling
 
 import (
-	"os"
 	"bufio"
 	"log"
-	"fmt"
+	"os"
+	"github.com/rfornea/invasion/models"
 )
 
 func ReadFile(fileName string) {
@@ -19,7 +19,7 @@ func ReadFile(fileName string) {
 	}()
 	s := bufio.NewScanner(f)
 	for s.Scan() {
-		fmt.Println(s.Text())
+		models.AddCityToMap(s.Text())
 	}
 	err = s.Err()
 	if err != nil {
