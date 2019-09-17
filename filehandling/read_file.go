@@ -2,15 +2,15 @@ package filehandling
 
 import (
 	"bufio"
+	"github.com/rfornea/invasion/models"
 	"log"
 	"os"
-	"github.com/rfornea/invasion/models"
 )
 
-func ReadFile(fileName string) {
+func ReadFile(fileName string) error {
 	f, err := os.Open(fileName)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer func() {
 		if err = f.Close(); err != nil {
@@ -21,8 +21,10 @@ func ReadFile(fileName string) {
 	for s.Scan() {
 		models.AddCityToMap(s.Text())
 	}
+
 	err = s.Err()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
 }
