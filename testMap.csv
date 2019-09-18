@@ -1,7 +1,7 @@
 Foo north=Bar west=Baz south=Qu-ux
-Bar south=Foo west=Bee
+Bar south=foo WEST=Bee
 Baz east=Foo
-Bee east=Bar
+bee east=Bar
 Qu-ux north=Foo
 New China west=Old York Town
 Old York Town east=New China

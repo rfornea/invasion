@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/prometheus/common/log"
 	"github.com/rfornea/invasion/filehandling"
-	"github.com/rfornea/invasion/models"
+	"github.com/rfornea/invasion/maps"
 	"strconv"
 )
 
@@ -19,6 +19,10 @@ func main() {
 
 	flag.Parse()
 
+	if *aliensPtr < 2 {
+		log.Fatal("You need at least 2 aliens for an invasion!")
+	}
+
 	fmt.Println("numAliens:", *aliensPtr)
 	fmt.Println("fpath:", *fptr)
 	fmt.Println()
@@ -28,7 +32,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	models.InitializeAliens(*aliensPtr)
+	allCitiesDestroyed := maps.InitializeAliens(*aliensPtr)
 
 	maxMoves := 10000
 	var actualMoves int
@@ -36,10 +40,10 @@ func main() {
 	allTrapped := false
 
 	for actualMoves = 0; actualMoves < maxMoves; actualMoves++ {
-		allDead, allTrapped = models.MoveAllAliens()
-		if allDead || allTrapped {
+		if allCitiesDestroyed || allDead || allTrapped {
 			break
 		}
+		allDead, allTrapped = maps.MoveAllAliens()
 	}
 
 	var msg string
@@ -52,6 +56,10 @@ func main() {
 	if allDead {
 		msg = "Invasion over because all aliens are dead."
 	}
+	if allCitiesDestroyed {
+		msg = "Invasion over because all cities were destroyed (you may have created too many aliens for the number of cities in your map)."
+	}
+
 	fmt.Println("_________________________________")
 	fmt.Println(msg)
 
@@ -59,7 +67,7 @@ func main() {
 
 	fmt.Println("Remaining world:")
 	fmt.Println()
-	models.PrintInvasionResult()
+	maps.PrintInvasionResult()
 
 	fmt.Println("_________________________________")
 }
